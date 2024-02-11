@@ -5,9 +5,9 @@ JMP SHORT MAIN
 NOP
 
 bdb_oem:                 DB 'MSWIN4.1'
-bdb_bytes_per_sector:    DB 512
+bdb_bytes_per_sector:    DW 512
 bdb_sectors_per_cluster: DB 1
-bdb_reserved_sectors:    DB 1
+bdb_reserved_sectors:    DW 1
 bdb_fat_count:           DB 2
 bdb_dir_entries_count:   DW 0E0h
 bdb_total_sectors:       DW 2880
