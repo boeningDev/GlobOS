@@ -31,34 +31,27 @@ MAIN:
     MOV es, ax
     MOV ss, ax
     MOV sp, 0x7C00
-    MOV si, message
+    MOV si, ms_booting
     CALL print
+    MOV dl, [ebr_drive_number]  ;Drive Number
+    MOV ax, 1                   ;Sectors to Read
+    MOV cl, 1                   ;Sector to read
+    MOV bx, 0x7E00              ;buffer
+    CALL read_disk
+
+    ;reserved:              1 Sector    0
+    ;fat:       9spf*2fat=  18 Sectors  1-18
+    ;root dir:      
+
     HLT
 
 HLT_LOOP:
     JMP HLT_LOOP
 
-message: DB 'Hello World!', 0x0D, 0x0A, 0
 
-print:
-    PUSH si
-    PUSH ax
-    PUSH bx
-
-p_loop:
-    LODSB
-    OR al,al
-    JZ p_ret
-    MOV ah, 0x0E
-    MOV bh, 0
-    INT 0x10
-    JMP p_loop
-
-p_ret:
-    POP bx
-    POP ax
-    POP si
-    RET
-
+%include 'src/constants.asm'
+%include 'src/print.asm'
+%include 'src/read_disk.asm'
+buffer:
 TIMES 510-($-$$) DB 0
 DW 0AA55h
